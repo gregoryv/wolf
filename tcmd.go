@@ -21,7 +21,7 @@ func NewTCmd(args ...string) *TCmd {
 	wd, err := ioutil.TempDir("", path.Base(args[0]))
 	handleErr(err)
 	cmd := TCmd{
-		env: map[string]string{
+		Env: map[string]string{
 			"PWD": wd,
 		},
 		args:  args,
@@ -39,18 +39,18 @@ var handleErr = func(err error) {
 }
 
 type TCmd struct {
-	env   map[string]string
+	Env map[string]string
+	Out bytes.Buffer //  Stdout
+	Err bytes.Buffer // Stderr
+
 	args  []string
 	dir   string
 	stdin io.Reader
-	Out   bytes.Buffer //  Stdout
-	Err   bytes.Buffer // Stderr
-
-	t T
+	t     T
 }
 
 func (me *TCmd) Getenv(key string) (v string) {
-	v, _ = me.env[key]
+	v, _ = me.Env[key]
 	return
 }
 
