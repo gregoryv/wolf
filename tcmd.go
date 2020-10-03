@@ -39,12 +39,14 @@ var handleErr = func(err error) {
 }
 
 type TCmd struct {
-	env    map[string]string
-	args   []string
-	dir    string
-	stdin  io.Reader
-	stdout bytes.Buffer
-	stderr bytes.Buffer
+	env   map[string]string
+	args  []string
+	dir   string
+	stdin io.Reader
+	Out   bytes.Buffer //  Stdout
+	Err   bytes.Buffer // Stderr
+
+	t T
 }
 
 func (me *TCmd) Getenv(key string) (v string) {
@@ -55,8 +57,49 @@ func (me *TCmd) Getenv(key string) (v string) {
 func (me *TCmd) Args() []string         { return me.args }
 func (me *TCmd) Getwd() (string, error) { return me.dir, nil }
 func (me *TCmd) Stdin() io.Reader       { return me.stdin }
-func (me *TCmd) Stdout() io.Writer      { return &me.stdout }
-func (me *TCmd) Stderr() io.Writer      { return &me.stderr }
+func (me *TCmd) Stdout() io.Writer {
+	if me.t != nil {
+		return writeFunc(func(data []byte) (int, error) {
+			lines := bytes.Split(data, []byte("\n"))
+			for _, line := range lines {
+				me.t.Log("stdout:", string(line))
+			}
+			me.Out.Write(data)
+			return len(data), nil
+		})
+	}
+	return &me.Out
+}
+func (me *TCmd) Stderr() io.Writer {
+	if me.t != nil {
+		return writeFunc(func(data []byte) (int, error) {
+			lines := bytes.Split(data, []byte("\n"))
+			for _, line := range lines {
+				me.t.Log("stderr:", string(line))
+			}
+			me.Err.Write(data)
+			return len(data), nil
+		})
+	}
+	return &me.Err
+}
 
 // Cleanup
 func (me *TCmd) Cleanup() { os.RemoveAll(me.dir) }
+
+// Use redirects stdout and stderr to t.Log.
+func (me *TCmd) Use(t T) *TCmd {
+	me.t = t
+	return me
+}
+
+type writeFunc func([]byte) (int, error)
+
+// Method
+func (me writeFunc) Write(data []byte) (int, error) {
+	return me(data)
+}
+
+type T interface {
+	Log(...interface{})
+}

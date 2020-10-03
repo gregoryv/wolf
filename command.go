@@ -1,4 +1,17 @@
-// Package wolf provides a generic command implementation
+/* Package wolf provides a generic command implementation.
+
+Type Command wraps the way a command was called. NewOSCmd returns a
+wrapper for various os.X methods, whereas NewTCmd uses temporary
+directories and mocked environment for easy testing.
+
+   func Test_myRunFunc(t *testing.T) {
+       cmd := wolf.NewTCmd().Use(t)
+       defer cmd.Cleanup()
+
+       myRunFunc(cmd)
+   }
+
+*/
 package wolf
 
 import "io"
