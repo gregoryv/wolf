@@ -20,7 +20,6 @@ func TestNewTestCmd(t *testing.T) {
 	assert(cmd.Stdout() != nil).Error("nil cmd.Stdout")
 	assert(cmd.Stderr() != nil).Error("nil cmd.Stderr")
 
-	cmd.Use(t)
 	cmd.Stdout().Write([]byte("line1\nline2\nline 3"))
 	cmd.Stderr().Write([]byte("line1\nline2\nline 3"))
 }

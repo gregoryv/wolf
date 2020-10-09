@@ -2,18 +2,17 @@ package wolf_test
 
 import (
 	"fmt"
-	"os"
 
-	"github.com/gregoryv/fox"
 	"github.com/gregoryv/wolf"
 )
 
 func ExampleTCmd_Use() {
-	t := fox.NewSyncLog(os.Stdout) // ie. *testing.T
-	cmd := wolf.NewTCmd().Use(t)
+	cmd := wolf.NewTCmd()
 	defer cmd.Cleanup()
 
 	myRunFunc(cmd)
+	fmt.Println("stdout:", cmd.Out.String())
+	fmt.Println("stderr:", cmd.Err.String())
 	// output:
 	// stdout: wolf is howling
 	// stderr: wolf plays pacman
