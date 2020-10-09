@@ -16,12 +16,12 @@ in your func main
 and in your tests
 
 	func Test_myRunFunc(t *testing.T) {
-       cmd := wolf.NewTCmd().Use(t)
+       cmd := wolf.NewTCmd()
        defer cmd.Cleanup()
 
        app := NewApp(cmd)
 	   code := app.Run()
 	   if code != 0 {
-           t.Fail()
+           t.Error(cmd.Out.String(), "\n", cmd.Err.String())
        }
     }
