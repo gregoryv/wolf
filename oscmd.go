@@ -18,3 +18,6 @@ func (me *OSCmd) Getwd() (string, error)   { return os.Getwd() }
 func (me *OSCmd) Stdin() io.Reader         { return os.Stdin }
 func (me *OSCmd) Stdout() io.Writer        { return os.Stdout }
 func (me *OSCmd) Stderr() io.Writer        { return os.Stderr }
+
+// Stop returns the given exit code
+func (me *OSCmd) Stop(exitCode int) int { return exitCode }

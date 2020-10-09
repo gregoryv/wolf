@@ -5,10 +5,11 @@ wrapper for various os.X methods, whereas NewTCmd uses temporary
 directories and mocked environment for easy testing.
 
    func Test_myRunFunc(t *testing.T) {
-       cmd := wolf.NewTCmd().Use(t)
+       cmd := wolf.NewTCmd()
        defer cmd.Cleanup()
 
        myRunFunc(cmd)
+       t.Log(cmd.Dump())
    }
 
 */
@@ -24,4 +25,5 @@ type Command interface {
 	Stdin() io.Reader
 	Stdout() io.Writer
 	Stderr() io.Writer
+	Stop(exitCode int) int
 }

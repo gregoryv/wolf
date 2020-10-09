@@ -26,9 +26,10 @@ func NewTCmd(args ...string) *TCmd {
 		Env: map[string]string{
 			"PWD": wd,
 		},
-		args:  args,
-		dir:   wd,
-		stdin: strings.NewReader(""),
+		args:     args,
+		dir:      wd,
+		stdin:    strings.NewReader(""),
+		ExitCode: -1, // still running
 	}
 	os.Chdir(cmd.dir)
 	return &cmd
@@ -41,9 +42,10 @@ var handleErr = func(err error) {
 }
 
 type TCmd struct {
-	Env map[string]string
-	Out bytes.Buffer // Stdout
-	Err bytes.Buffer // Stderr
+	Env      map[string]string
+	Out      bytes.Buffer // Stdout
+	Err      bytes.Buffer // Stderr
+	ExitCode int
 
 	args  []string
 	dir   string
@@ -60,6 +62,12 @@ func (me *TCmd) Getwd() (string, error) { return me.dir, nil }
 func (me *TCmd) Stdin() io.Reader       { return me.stdin }
 func (me *TCmd) Stdout() io.Writer      { return &me.Out }
 func (me *TCmd) Stderr() io.Writer      { return &me.Err }
+
+// Stop sets ExitCode and returns it
+func (me *TCmd) Stop(code int) int {
+	me.ExitCode = code
+	return code
+}
 
 // Cleanup
 func (me *TCmd) Cleanup() { os.RemoveAll(me.dir) }
