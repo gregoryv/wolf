@@ -82,12 +82,14 @@ func (me *TCmd) Dump() string {
 // DumpTo writes argument, stdout and stderr if any to the given writer
 func (me *TCmd) DumpTo(w io.Writer) error {
 	p, err := nexus.NewPrinter(w)
-
 	p.Print("> ")
 	p.Print(strings.Join(me.Args(), " "))
 	p.Println()
 	io.Copy(p, &me.Out)
-
+	if me.ExitCode != -1 {
+		p.Println()
+		p.Print("exit ", me.ExitCode)
+	}
 	if me.Err.Len() > 0 {
 		p.Println()
 		p.Println("STDERR:")

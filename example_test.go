@@ -15,6 +15,7 @@ func ExampleTCmd_Use() {
 	// output:
 	// > mycmd -h
 	// wolf is howling
+	// exit 0
 	// STDERR:
 	// wolf plays pacman
 }
@@ -22,4 +23,5 @@ func ExampleTCmd_Use() {
 func myRunFunc(cmd wolf.Command) {
 	fmt.Fprint(cmd.Stdout(), "wolf is howling")
 	fmt.Fprint(cmd.Stderr(), "wolf plays pacman")
+	cmd.Stop(0)
 }
