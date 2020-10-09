@@ -7,6 +7,8 @@ import (
 	"os"
 	"path"
 	"strings"
+
+	"github.com/gregoryv/nexus"
 )
 
 // NewTCmd returns a command with temporary working directory and
@@ -61,3 +63,27 @@ func (me *TCmd) Stderr() io.Writer      { return &me.Err }
 
 // Cleanup
 func (me *TCmd) Cleanup() { os.RemoveAll(me.dir) }
+
+// Dump returns a dump of the command, see DumpTo
+func (me *TCmd) Dump() string {
+	var b strings.Builder
+	me.DumpTo(&b)
+	return b.String()
+}
+
+// DumpTo writes argument, stdout and stderr if any to the given writer
+func (me *TCmd) DumpTo(w io.Writer) error {
+	p, err := nexus.NewPrinter(w)
+
+	p.Print("> ")
+	p.Print(strings.Join(me.Args(), " "))
+	p.Println()
+	io.Copy(p, &me.Out)
+
+	if me.Err.Len() > 0 {
+		p.Println()
+		p.Println("STDERR:")
+		io.Copy(p, &me.Err)
+	}
+	return *err
+}

@@ -7,15 +7,16 @@ import (
 )
 
 func ExampleTCmd_Use() {
-	cmd := wolf.NewTCmd()
+	cmd := wolf.NewTCmd("mycmd", "-h")
 	defer cmd.Cleanup()
 
 	myRunFunc(cmd)
-	fmt.Println("stdout:", cmd.Out.String())
-	fmt.Println("stderr:", cmd.Err.String())
+	fmt.Println(cmd.Dump())
 	// output:
-	// stdout: wolf is howling
-	// stderr: wolf plays pacman
+	// > mycmd -h
+	// wolf is howling
+	// STDERR:
+	// wolf plays pacman
 }
 
 func myRunFunc(cmd wolf.Command) {
