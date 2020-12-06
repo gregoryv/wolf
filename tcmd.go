@@ -22,12 +22,15 @@ func NewTCmd(args ...string) *TCmd {
 	}
 	wd, err := ioutil.TempDir("", path.Base(args[0]))
 	handleErr(err)
+	origin, err := os.Getwd()
+	handleErr(err)
 	cmd := TCmd{
 		Env: map[string]string{
 			"PWD": wd,
 		},
 		args:     args,
 		dir:      wd,
+		origin:   origin,
 		stdin:    strings.NewReader(""),
 		ExitCode: -1, // still running
 	}
@@ -47,9 +50,10 @@ type TCmd struct {
 	Err      bytes.Buffer // Stderr
 	ExitCode int
 
-	args  []string
-	dir   string
-	stdin io.Reader
+	args   []string
+	dir    string
+	origin string
+	stdin  io.Reader
 }
 
 func (me *TCmd) Getenv(key string) (v string) {
@@ -70,7 +74,10 @@ func (me *TCmd) Stop(code int) int {
 }
 
 // Cleanup
-func (me *TCmd) Cleanup() { os.RemoveAll(me.dir) }
+func (me *TCmd) Cleanup() {
+	os.Chdir(me.origin)
+	os.RemoveAll(me.dir)
+}
 
 // Dump returns a dump of the command, see DumpTo
 func (me *TCmd) Dump() string {
