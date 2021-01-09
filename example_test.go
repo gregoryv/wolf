@@ -13,7 +13,7 @@ func ExampleTCmd_Use() {
 	myRunFunc(cmd)
 	fmt.Println(cmd.Dump())
 	// output:
-	// > mycmd -h
+	// $ mycmd -h
 	// wolf is howling
 	// exit 0
 	// STDERR:

@@ -67,13 +67,14 @@ func (me *TCmd) Stdin() io.Reader       { return me.stdin }
 func (me *TCmd) Stdout() io.Writer      { return &me.Out }
 func (me *TCmd) Stderr() io.Writer      { return &me.Err }
 
-// Stop sets ExitCode and returns it
+// Stop sets ExitCode and returns it.
 func (me *TCmd) Stop(code int) int {
 	me.ExitCode = code
 	return code
 }
 
-// Cleanup
+// Cleanup removes temporary directory and restores the working
+// directory.
 func (me *TCmd) Cleanup() {
 	os.Chdir(me.origin)
 	os.RemoveAll(me.dir)
@@ -89,7 +90,7 @@ func (me *TCmd) Dump() string {
 // DumpTo writes argument, stdout and stderr if any to the given writer
 func (me *TCmd) DumpTo(w io.Writer) error {
 	p, err := nexus.NewPrinter(w)
-	p.Print("> ")
+	p.Print("$ ")
 	p.Print(strings.Join(me.Args(), " "))
 	p.Println()
 	io.Copy(p, &me.Out)
