@@ -2,6 +2,7 @@ package wolf
 
 import (
 	"io"
+	"log"
 	"os"
 )
 
@@ -21,3 +22,4 @@ func (me *OSCmd) Stderr() io.Writer        { return os.Stderr }
 
 // Stop returns the given exit code
 func (me *OSCmd) Stop(exitCode int) int { return exitCode }
+func (me *TCmd) Fatal(v ...interface{}) { log.Fatal(v...) }

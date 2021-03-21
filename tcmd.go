@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"path"
 	"strings"
@@ -71,6 +72,12 @@ func (me *TCmd) Stderr() io.Writer      { return &me.Err }
 func (me *TCmd) Stop(code int) int {
 	me.ExitCode = code
 	return code
+}
+
+// Fatal logs the given values and calls the Exit method
+func (me *TCmd) Fatal(v ...interface{}) {
+	log.Println(v...)
+	me.Stop(1)
 }
 
 // Cleanup removes temporary directory and restores the working

@@ -26,4 +26,5 @@ type Command interface {
 	Stdout() io.Writer
 	Stderr() io.Writer
 	Stop(exitCode int) int
+	Fatal(v ...interface{})
 }
