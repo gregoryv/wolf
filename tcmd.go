@@ -68,16 +68,13 @@ func (me *TCmd) Stdin() io.Reader       { return me.stdin }
 func (me *TCmd) Stdout() io.Writer      { return &me.Out }
 func (me *TCmd) Stderr() io.Writer      { return &me.Err }
 
-// Stop sets ExitCode and returns it.
-func (me *TCmd) Stop(code int) int {
-	me.ExitCode = code
-	return code
-}
+// Exit sets ExitCode
+func (me *TCmd) Exit(code int) { me.ExitCode = code }
 
 // Fatal logs the given values and calls the Exit method
 func (me *TCmd) Fatal(v ...interface{}) {
 	log.Println(v...)
-	me.Stop(1)
+	me.Exit(1)
 }
 
 // Cleanup removes temporary directory and restores the working

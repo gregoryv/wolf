@@ -23,5 +23,5 @@ func ExampleTCmd_Use() {
 func myRunFunc(cmd wolf.Command) {
 	fmt.Fprint(cmd.Stdout(), "wolf is howling")
 	fmt.Fprint(cmd.Stderr(), "wolf plays pacman")
-	cmd.Stop(0)
+	cmd.Exit(0)
 }

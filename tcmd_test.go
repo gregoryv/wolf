@@ -19,7 +19,8 @@ func TestNewTestCmd(t *testing.T) {
 	assert(cmd.Stdin() != nil).Error("nil cmd.Stdin")
 	assert(cmd.Stdout() != nil).Error("nil cmd.Stdout")
 	assert(cmd.Stderr() != nil).Error("nil cmd.Stderr")
-	assert(cmd.Stop(1) == 1).Errorf("ExitCode not 1")
+	cmd.Exit(1)
+	assert(cmd.ExitCode == 1).Errorf("ExitCode not 1")
 
 	cmd.Stdout().Write([]byte("line1\nline2\nline 3"))
 	cmd.Stderr().Write([]byte("line1\nline2\nline 3"))

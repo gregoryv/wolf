@@ -25,6 +25,6 @@ type Command interface {
 	Stdin() io.Reader
 	Stdout() io.Writer
 	Stderr() io.Writer
-	Stop(exitCode int) int
+	Exit(code int)
 	Fatal(v ...interface{})
 }

@@ -7,7 +7,13 @@ import (
 )
 
 func TestNewOSCmd(t *testing.T) {
-	testCommand(t, NewOSCmd())
+	cmd := NewOSCmd()
+	cmd.exit = func(v int) {
+		if v != 1 {
+			t.Error("got exit code", v)
+		}
+	}
+	testCommand(t, cmd)
 	testCommand(t, NewTCmd())
 }
 
@@ -22,5 +28,6 @@ func testCommand(t *testing.T, cmd Command) {
 	assert(cmd.Stdin() != nil).Error("nil cmd.Stdin")
 	assert(cmd.Stdout() != nil).Error("nil cmd.Stdout")
 	assert(cmd.Stderr() != nil).Error("nil cmd.Stderr")
-	assert(cmd.Stop(0) == 0).Error("exit code not 0")
+	cmd.Fatal()
+	cmd.Exit(1)
 }
