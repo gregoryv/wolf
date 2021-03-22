@@ -33,7 +33,7 @@ func NewTCmd(args ...string) *TCmd {
 		dir:      wd,
 		origin:   origin,
 		stdin:    strings.NewReader(""),
-		ExitCode: -1, // still running
+		ExitCode: 0,
 	}
 	os.Chdir(cmd.dir)
 	return &cmd
@@ -98,10 +98,9 @@ func (me *TCmd) DumpTo(w io.Writer) error {
 	p.Print(strings.Join(me.Args(), " "))
 	p.Println()
 	io.Copy(p, &me.Out)
-	if me.ExitCode != -1 {
-		p.Println()
-		p.Print("exit ", me.ExitCode)
-	}
+	p.Println()
+	p.Print("exit ", me.ExitCode)
+
 	if me.Err.Len() > 0 {
 		p.Println()
 		p.Println("STDERR:")
