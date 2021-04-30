@@ -32,7 +32,6 @@ func NewTCmd(args ...string) *TCmd {
 		args:     args,
 		dir:      wd,
 		origin:   origin,
-		stdin:    strings.NewReader(""),
 		ExitCode: 0,
 	}
 	os.Chdir(cmd.dir)
@@ -49,12 +48,12 @@ type TCmd struct {
 	Env      map[string]string
 	Out      bytes.Buffer // Stdout
 	Err      bytes.Buffer // Stderr
-	ExitCode int
+	In       bytes.Buffer // Stdin
+	ExitCode int          // Set by method Exit
 
 	args   []string
 	dir    string
 	origin string
-	stdin  io.Reader
 }
 
 func (me *TCmd) Getenv(key string) (v string) {
@@ -64,7 +63,7 @@ func (me *TCmd) Getenv(key string) (v string) {
 
 func (me *TCmd) Args() []string         { return me.args }
 func (me *TCmd) Getwd() (string, error) { return me.dir, nil }
-func (me *TCmd) Stdin() io.Reader       { return me.stdin }
+func (me *TCmd) Stdin() io.Reader       { return &me.In }
 func (me *TCmd) Stdout() io.Writer      { return &me.Out }
 func (me *TCmd) Stderr() io.Writer      { return &me.Err }
 
