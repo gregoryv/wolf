@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to semantic versioning.
 
-## [unreleased]
+## [0.8.0] 2021-04-30
 
 - Add TCmd.In field as Stdin reader
 - TCmd defaults to exit code 0
