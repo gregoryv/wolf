@@ -1,5 +1,7 @@
 [wolf](https://godoc.org/github.com/gregoryv/wolf) - Package wolf provides a generic command implementation
 
+**ARCHIVED**
+
 ## Quick start
 
     go get github.com/gregoryv/wolf
